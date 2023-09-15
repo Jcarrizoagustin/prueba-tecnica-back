@@ -5,8 +5,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +42,6 @@ public class Doctor {
 
     // Este metodo verifica si el doctor atiende en cierto dia y hora
     public boolean estaDisponible(LocalDate dia, LocalTime hora){
-
         Optional<HorarioAtencion> diaDisponible = this.horarios.stream()
                 .filter(horario -> horario.getDiaDeLaSemana().equals(dia.getDayOfWeek().getValue()))
                 .findFirst();
@@ -55,7 +52,7 @@ public class Doctor {
         }
 
         //Verificamos que el horario pasado por parametro se encuentre en el rango de horas que prevee atender
-        return (diaDisponible.get().getHoraInicio().isBefore(hora) || diaDisponible.get().getHoraInicio().equals(hora)) && diaDisponible.get().getHoraFin().isAfter(hora);
-
+        return (diaDisponible.get().getHoraInicio().isBefore(hora) || diaDisponible.get().getHoraInicio().equals(hora))
+                && diaDisponible.get().getHoraFin().isAfter(hora);
     }
 }

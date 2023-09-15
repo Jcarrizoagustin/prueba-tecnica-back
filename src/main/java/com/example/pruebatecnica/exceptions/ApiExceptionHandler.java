@@ -26,7 +26,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler({
             DoctorNoEstaDisponibleException.class,
             ConsultorioOcupadoException.class,
-            TurnoNoSePuedeCancelarOModificarException.class
+            TurnoNoSePuedeCancelarOModificarException.class,
+            PacienteExistenteException.class
 
     })
     @ResponseBody
@@ -41,6 +42,15 @@ public class ApiExceptionHandler {
     })
     @ResponseBody
     public MensajeError badRequest(HttpServletRequest request, Exception exception){
+        return new MensajeError(exception, request.getRequestURI());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({
+            Exception.class
+    })
+    @ResponseBody
+    public MensajeError internal(HttpServletRequest request, Exception exception){
         return new MensajeError(exception, request.getRequestURI());
     }
 

@@ -44,18 +44,18 @@ public class TurnoService {
         Doctor doctor = doctorService.obtenerDoctorPorId(dto.getDoctor_id());
 
         if(dia.getDayOfWeek().getValue() == 7 || hora.isBefore(LocalTime.parse("08:00")) || hora.isAfter(LocalTime.parse("23:00"))){
-            throw new ClinicaFueraDeServicioException("Error en fecha y/o hora del turno. La clinica solo atiende de Lunes a Sabados en el horario de 8 a 23");
+            throw new ClinicaFueraDeServicioException("Error en fecha y/o hora del turno. La clinica solo atiende de Lunes a Sabados en el horario de 8:00 a 23:00");
         }
 
         if(doctor.estaDisponible(dia,hora)){
-
             if(!consultorioDisponible(consultorio,dia,hora)){
-                throw new ConsultorioOcupadoException("El consultorio se encuentra ocupado por otro turno");
+                throw new ConsultorioOcupadoException("El consultorio " + consultorio.getId().toString() + " se encuentra ocupado por otro turno");
             }
 
-            if(!noTieneOtroTurno(doctor,dia,hora)){
+            if(!doctorNoTieneOtroTurno(doctor,dia,hora)){
                 throw new DoctorNoEstaDisponibleException("El doctor tiene agendado otro turno para este dia y hora");
             }
+
             Turno turno = new Turno();
             turno.setConsultorio(consultorio);
             turno.setDoctor(doctor);
@@ -79,7 +79,7 @@ public class TurnoService {
 
 
     //Verificamos que el doctor no tenga un turno en el dia y hora proporcionados
-    public boolean noTieneOtroTurno(Doctor doctor, LocalDate dia, LocalTime hora){
+    public boolean doctorNoTieneOtroTurno(Doctor doctor, LocalDate dia, LocalTime hora){
         return listadoTurnosPorDoctor(doctor).stream()
                 .noneMatch(horario -> horario.getDia().equals(dia) && horario.getHora().equals(hora));
     }
@@ -113,7 +113,7 @@ public class TurnoService {
         if(!doctor.estaDisponible(dia,hora)){
             throw new DoctorNoEstaDisponibleException("El doctor no atiende en estos horarios");
         }
-        if(!noTieneOtroTurno(doctor,dia,hora)){
+        if(!doctorNoTieneOtroTurno(doctor,dia,hora)){
             throw new DoctorNoEstaDisponibleException("El doctor tiene agendado otro turno para este dia y hora");
         }
         turno.setDia(dia);
@@ -146,5 +146,13 @@ public class TurnoService {
     public List<Turno> listadoTurnosPorIDPaciente(Long id){
         Paciente paciente = pacienteService.obtenerPacientePorId(id);
         return turnoRepository.findAllByPaciente(paciente);
+    }
+
+    public Turno obtenerTurnoPorId(Long id) {
+        Optional<Turno> turnoOptional = turnoRepository.findById(id);
+        if(turnoOptional.isEmpty()){
+            throw new EntidadNoEncontradaException("El turno con el id solicitado no se encuentra registrado");
+        }
+        return turnoOptional.get();
     }
 }

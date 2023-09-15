@@ -2,6 +2,7 @@ package com.example.pruebatecnica.services;
 
 import com.example.pruebatecnica.dtos.paciente.PacienteRequestDTO;
 import com.example.pruebatecnica.exceptions.EntidadNoEncontradaException;
+import com.example.pruebatecnica.exceptions.PacienteExistenteException;
 import com.example.pruebatecnica.model.Paciente;
 import com.example.pruebatecnica.repositories.PacienteRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class PacienteService {
     }
 
     public Paciente nuevoPaciente(PacienteRequestDTO dto) {
+        if(pacienteRepository.existsByDni(dto.getDni())){
+            throw new PacienteExistenteException("El paciente con dni " + dto.getDni()+ " ya se encuentra registrado.");
+        }
         Paciente paciente = new Paciente();
         paciente.setNombre(dto.getNombre());
         paciente.setApellido(dto.getApellido());

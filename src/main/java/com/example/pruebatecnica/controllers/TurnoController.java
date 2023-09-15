@@ -49,4 +49,9 @@ public class TurnoController {
     public ResponseEntity<List<Turno>> listadoDeTurnosPorPaciente(@RequestParam Long pacienteId){
         return ResponseEntity.ok(turnoService.listadoTurnosPorIDPaciente(pacienteId));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Turno> obtenerTurnoPorId(@PathVariable Long id){
+        return ResponseEntity.ok(turnoService.obtenerTurnoPorId(id));
+    }
 }
