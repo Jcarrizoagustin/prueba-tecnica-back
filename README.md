@@ -7,7 +7,7 @@
 Para el correcto funcionamiento de la aplicacion es necesario tener las siguientes dependencias:
 
 - [Java 17](https://techkrowd.com/programacion/como-instalar-jdk-17-en-windows-10-y-11/) - Guia de instalación
-- [Maven](https://www.arteco-consulting.com/post/java/instalacion-de-maven) - Guia de instalación
+- [Maven](https://www.arteco-consulting.com/post/instalacion-de-maven) - Guia de instalación
 
 ## Caracteristicas
 ### Gestión de datos
